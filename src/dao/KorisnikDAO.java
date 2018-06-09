@@ -35,7 +35,7 @@ public class KorisnikDAO {
 				korisnik.setPrezime(resultSet.getString(index++));
 				korisnik.setEmail(resultSet.getString(index++));
 				korisnik.setOpis(resultSet.getString(index++));
-				korisnik.setDatumRegistracije(resultSet.getDate(index++));
+				korisnik.setDatumRegistracije(resultSet.getTimestamp(index++));
 				korisnik.setUloga(Uloga.valueOf(resultSet.getString(index++)));
 				korisnik.setBlokiran(resultSet.getBoolean(index++));
 				
@@ -71,7 +71,8 @@ public class KorisnikDAO {
 			preparedStatement.setString(index++, korisnik.getPrezime());
 			preparedStatement.setString(index++, korisnik.getEmail());
 			preparedStatement.setString(index++, korisnik.getOpis());
-			preparedStatement.setDate(index++, new Date(korisnik.getDatumRegistracije().getTime()));
+			java.sql.Timestamp sq = new java.sql.Timestamp(korisnik.getDatumRegistracije().getTime());  
+			preparedStatement.setTimestamp(index++, sq);
 			preparedStatement.setString(index++, korisnik.getUloga().name());
 			preparedStatement.setBoolean(index++, korisnik.isBlokiran());
 			

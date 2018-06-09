@@ -15,6 +15,7 @@ public class VideoDTO {
 	private int brojPregleda;
 	private Date datumKreiranja;
 	private String korisnikUsername;
+	private boolean subscribed;
 	
 	public VideoDTO() {}
 	
@@ -112,6 +113,16 @@ public class VideoDTO {
 	public void setKorisnikUsername(String korisnikUsername) {
 		this.korisnikUsername = korisnikUsername;
 	}
+
+	public boolean isSubscribed() {
+		return subscribed;
+	}
+
+	public void setSubscribed(boolean subscribed) {
+		this.subscribed = subscribed;
+	}
+	
+	
 
 
 	

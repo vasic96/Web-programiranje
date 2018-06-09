@@ -35,7 +35,7 @@ public class KorisnikServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		String username = request.getParameter("username");
 		String action = request.getParameter("action");
 		if(action.equals("get")) {
@@ -55,7 +55,7 @@ public class KorisnikServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		String body = request.getReader().lines()
 			    .reduce("", (accumulator, actual) -> accumulator + actual);
 		Korisnik korisnik = gson.fromJson(body, Korisnik.class);

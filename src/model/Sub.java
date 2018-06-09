@@ -1,28 +1,29 @@
 package model;
 
+import java.util.Date;
+
 public class Sub {
 	
-	private int id;
 	private String korisnik;
 	private String toKorisnik;
+	private Date datum;
 	
 	public Sub() {}
 
-	public Sub(int id, String korisnik, String toKorisnik) {
+	public Sub(String korisnik, String toKorisnik, Date datum) {
 		super();
-		this.id = id;
+		this.korisnik = korisnik;
+		this.toKorisnik = toKorisnik;
+		this.datum = datum;
+	}
+	
+
+	public Sub(String korisnik, String toKorisnik) {
+		super();
 		this.korisnik = korisnik;
 		this.toKorisnik = toKorisnik;
 	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	
 	public String getKorisnik() {
 		return korisnik;
 	}
@@ -37,13 +38,21 @@ public class Sub {
 
 	public void setToKorisnik(String toKorisnik) {
 		this.toKorisnik = toKorisnik;
+	} 
+
+	public Date getDatum() {
+		return datum;
+	}
+
+	public void setDatum(Date datum) {
+		this.datum = datum;
 	}
 
 	@Override
 	public String toString() {
-		return "Sub [id=" + id + ", korisnik=" + korisnik + ", toKorisnik=" + toKorisnik + "]";
+		return "Sub [korisnik=" + korisnik + ", toKorisnik=" + toKorisnik + ", datum=" + datum + "]";
 	}
-	
+
 	
 	
 	

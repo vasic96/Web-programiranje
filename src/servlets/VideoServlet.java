@@ -8,12 +8,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import dao.KorisnikDAO;
 import dao.VideoDAO;
 import dto.VideoDTO;
+import model.Korisnik;
 import model.Video;
 
 /**
@@ -35,7 +38,7 @@ public class VideoServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		int videoId = Integer.parseInt(request.getParameter("video_id"));
 		String action = request.getParameter("action");
 		System.out.println(action + "  " + videoId);
@@ -64,8 +67,15 @@ public class VideoServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		HttpSession session = request.getSession();
+		Korisnik korisnik = (Korisnik) session.getAttribute("ulogovanKorisnik");
+		if(korisnik == null) {
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
+		if(korisnik.isBlokiran()) {
+			response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+		}
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		String body = request.getReader().lines()
 			    .reduce("", (accumulator, actual) -> accumulator + actual);
 		System.out.println(body);
@@ -79,7 +89,7 @@ public class VideoServlet extends HttpServlet {
 		video.setBlokiran(false);
 		video.setBrojPregleda(0);
 		video.setDatumKreiranja(new Date());
-		video.setKorisnik(KorisnikDAO.getById(videoDTO.getKorisnikUsername()));
+		video.setKorisnik(korisnik);
 		System.out.println(video.toString());
 		
 		if(!VideoDAO.saveVideo(video)) {

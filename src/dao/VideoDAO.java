@@ -40,7 +40,7 @@ public class VideoDAO {
 				video.setVidljivostRejtinga(resultSet.getBoolean(index++));
 				video.setBlokiran(resultSet.getBoolean(index++));
 				video.setBrojPregleda(resultSet.getInt(index++));
-				video.setDatumKreiranja(resultSet.getDate(index++));
+				video.setDatumKreiranja(resultSet.getTimestamp(index++));
 				video.setKorisnik(KorisnikDAO.getById(resultSet.getString(index++)));
 				System.out.println(video);
 				return video;
@@ -58,6 +58,56 @@ public class VideoDAO {
 			
 			return null;
 		}
+	
+	public static List<Video> getAllByKorisnikUsername(String username){
+		
+		Connection connection = ConnectionManager.getConnection();
+		System.out.println(connection.toString());
+		
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		List<Video> videos = new ArrayList<>();
+		
+		try {
+			
+			String query = "SELECT id, naziv, url, opis, dozvoljeni_komentari,vidljivost_rejtinga, blokiran, broj_pregleda, datum_kreiranja, korisnik_username FROM videos WHERE korisnik_username = ?";
+			preparedStatement = connection.prepareStatement(query);
+			preparedStatement.setString(1, username);
+			System.out.println(preparedStatement);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			
+			while(resultSet.next()) {
+				int index = 1;
+				Video video = new Video();
+				video.setId(resultSet.getInt(index++));
+				video.setNaziv((resultSet.getString(index++)));
+				video.setUrl(resultSet.getString(index++));
+				video.setOpis(resultSet.getString(index++));
+				video.setDozvoljeniKomentari(resultSet.getBoolean(index++));
+				video.setVidljivostRejtinga(resultSet.getBoolean(index++));
+				video.setBlokiran(resultSet.getBoolean(index++));
+				video.setBrojPregleda(resultSet.getInt(index++));
+				video.setDatumKreiranja(resultSet.getTimestamp(index++));
+				video.setKorisnik(KorisnikDAO.getById(resultSet.getString(index++)));
+				System.out.println(video);
+				videos.add(video);
+			}
+			
+			
+		}catch (Exception e) {
+			
+				System.out.println(e.getMessage());
+			}
+		finally {
+			try {preparedStatement.close();} catch (SQLException ex1) {ex1.printStackTrace();}
+		}
+
+			
+			return videos;
+		
+	}
 	
 	public static List<Video> getAll(){
 		Connection connection = ConnectionManager.getConnection();
@@ -82,7 +132,7 @@ public class VideoDAO {
 				video.setVidljivostRejtinga(resultSet.getBoolean(index++));
 				video.setBlokiran(resultSet.getBoolean(index++));
 				video.setBrojPregleda(resultSet.getInt(index++));
-				video.setDatumKreiranja(resultSet.getDate(index++));
+				video.setDatumKreiranja(resultSet.getTimestamp(index++));
 				video.setKorisnik(KorisnikDAO.getById(resultSet.getString(index++)));
 				videos.add(video);
 			}
@@ -111,7 +161,8 @@ public class VideoDAO {
 			preparedStatement.setBoolean(index++, video.isVidljivostRejtinga());
 			preparedStatement.setBoolean(index++, video.isBlokiran());
 			preparedStatement.setInt(index++, video.getBrojPregleda());
-			preparedStatement.setDate(index++, new Date(video.getDatumKreiranja().getTime()));
+			java.sql.Timestamp sq = new java.sql.Timestamp(video.getDatumKreiranja().getTime());  
+			preparedStatement.setTimestamp(index++, sq);
 			preparedStatement.setString(index++, video.getKorisnik().getUsername());
 			System.out.println(preparedStatement);
 			
